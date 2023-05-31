@@ -1,5 +1,8 @@
 import logging
 from flask import Flask
+from flask import request
+
+import OAHandler.OARobot
 
 app = Flask(__name__)
 
@@ -18,6 +21,13 @@ logger.addHandler(handler)
 def hello():
     logger.info("input hello")
     return "Hello World!"
+
+@app.post("/")
+def OAHello():
+    req = request.get_json()
+    logger.info("|OArobot|%s", str(req))
+    return OAHandler.OARobot.sayHello(req)
+
 
 if __name__ == '__main__':
     app.run(host = '0.0.0.0', port = 1213)
