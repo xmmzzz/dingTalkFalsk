@@ -1,0 +1,1 @@
+nohup python3 -u hello.py > logs/flask.log 2>&1 &
