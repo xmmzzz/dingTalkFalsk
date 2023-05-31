@@ -1,6 +1,7 @@
 import logging
 from flask import Flask
 from flask import request
+import json
 
 import OAHandler.OARobot
 
@@ -26,7 +27,8 @@ def hello():
 def OAHello():
     req = request.get_json()
     logger.info("|OArobot|%s", str(req))
-    return OAHandler.OARobot.sayHello(req)
+    return json.dumps(OAHandler.OARobot.sayHello(req))
+
 
 
 if __name__ == '__main__':
