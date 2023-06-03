@@ -1,7 +1,7 @@
 import redis
 
 class RedisClient:
-    def __init__(self, host: str, port: int = 6379, decode_responses: bool = True):
+    def __init__(self, host: str, port: int = 6379, decode_responses: bool = False):
         self.pool = redis.ConnectionPool(host=host, port=port, decode_responses=decode_responses)
 
     def get(self, key: str) -> str:

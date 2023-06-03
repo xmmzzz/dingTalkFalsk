@@ -1,3 +1,5 @@
+import pickle
+
 import requests
 from redisClient import RedisClient
 import json
@@ -23,7 +25,7 @@ class ChatGLMClient:
 
     def sendRequest(self, data):
         res = requests.post(self.url, json=data)
-        logger.info("%s|%s", json.dumps(data).encode('gbk'), json.dumps(res.json()))
+        logger.info("|%s|%s|", data, res.text)
         res = json.loads(res.content)
         return res
 
@@ -32,12 +34,12 @@ class ChatGLMClient:
         if his_re is None:
             his_re = []
         else:
-            his_re = json.loads(his_re)
+            his_re = pickle.loads(his_re)
         data = {"prompt": prompt, "history": his_re}
         res = self.sendRequest(data)
         if res['status'] != 200:
             return "这个问题我不知道该怎么回答。"
         else:
-            self.redisClient.set(staffID, json.dumps(res['history']).encode('gbk'))
+            self.redisClient.set(staffID, pickle.dumps(res['history']), 5)
             return res['response']
 
