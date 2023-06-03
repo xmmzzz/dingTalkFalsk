@@ -30,4 +30,4 @@ def OAHello():
     return json.dumps(OAHandler.OARobot.sayHello(req))
 
 if __name__ == '__main__':
-    app.run(host = '0.0.0.0', port = 1213)
+    app.run(host = '0.0.0.0', port = 1213, ssl_context=('xmmzzz.top.pem', 'xmmzzz.top.key'))
