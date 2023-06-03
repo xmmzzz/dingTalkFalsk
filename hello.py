@@ -29,7 +29,5 @@ def OAHello():
     logger.info("|OArobot|%s", str(req))
     return json.dumps(OAHandler.OARobot.sayHello(req))
 
-
-
 if __name__ == '__main__':
     app.run(host = '0.0.0.0', port = 1213)

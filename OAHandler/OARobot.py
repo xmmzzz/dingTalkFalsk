@@ -1,22 +1,22 @@
-import json
+from httpRequest import ChatGLM
+import logging
 
-from redisClient.RedisClient import RedisClient
+chatGPTClient = ChatGLM.ChatGLMClient()
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
-redisClient = RedisClient("39.107.143.174")
+handler = logging.FileHandler("logs/app.log")
+handler.setLevel(logging.INFO)
+
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+
+logger.addHandler(handler)
 
 def sayHello(req):
     staffID = req["senderStaffId"]
-    his_re = redisClient.get(staffID)
-    if his_re is None:
-        his_re = []
-    else:
-        his_re = json.loads(his_re)
     res = {}
     res["msgtype"] = "text"
-    text = req["text"]["content"] + "\n"+ "历史对话(3min以内): "
-    for i in range(len(his_re)):
-        text += "{}\n".format(','.join(his_re[i]))
-    res["text"] = {"content": text}
-    his_re.append([req["text"]["content"]])
-    redisClient.set(staffID, json.dumps(his_re).encode('gbk'))
+    resText = chatGPTClient.sendPrompt(req["text"]["content"], staffID)
+    res["text"] = {"content": resText}
     return res
