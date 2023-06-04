@@ -3,3 +3,4 @@ requests>=2.18.4
 redis>=4.3.6
 pyOpenSSL>=19.0.0
 opencv_python>=4.3.0
+numpy>=1.19.5
