@@ -1,7 +1,8 @@
-from httpRequest import ChatGLM
+from httpRequest import ChatGLM, HttpClient
 import logging
 
 chatGPTClient = ChatGLM.ChatGLMClient()
+dingHttpClient = HttpClient.DingHttpClient()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
@@ -15,8 +16,33 @@ logger.addHandler(handler)
 
 def sayHello(req):
     staffID = req["senderStaffId"]
+    text, imgs = _handle_content(req)
+    text = text.replace('@啊哈', '')
+    resText = chatGPTClient.sendPrompt(text, staffID)
     res = {}
     res["msgtype"] = "text"
-    resText = chatGPTClient.sendPrompt(req["text"]["content"], staffID)
     res["text"] = {"content": resText}
     return res
+
+def _handle_content(req):
+    if req['msgtype'] == 'text':
+        return req["text"]["content"], None
+    elif req['msgtype'] == 'picture':
+        img = dingHttpClient.getImage(req['content']['downloadCode'], req['robotCode'])
+        return None, [img]
+    elif req['msgtype'] == 'richText':
+        return _handle_richText(req)
+    else:
+        return None, None
+
+def _handle_richText(req):
+    richText = req['content']['richText']
+    text = ""
+    imgs = []
+    for part in richText:
+        if 'text' in part:
+            text += part["text"]
+        elif part['type'] == 'picture':
+            imgs.append(dingHttpClient.getImage(part['downloadCode'], req['robotCode']))
+
+    return text, imgs
