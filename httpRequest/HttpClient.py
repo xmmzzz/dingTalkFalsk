@@ -1,7 +1,5 @@
 import requests
 import json
-import cv2
-import numpy as np
 
 class DingHttpClient:
     def __init__(self):
