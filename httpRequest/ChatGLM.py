@@ -21,7 +21,7 @@ logger.addHandler(handler)
 class ChatGLMClient:
     def __init__(self):
         self.url = "http://pub.dqyuan.top:8003"
-        self.redisClient = RedisClient.RedisClient("39.107.143.174")
+        self.redisClient = RedisClient.RedisClient("127.0.0.1")
 
     def sendRequest(self, data):
         res = requests.post(self.url, json=data)
