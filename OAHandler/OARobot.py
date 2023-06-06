@@ -18,7 +18,7 @@ def sayHello(req):
     staffID = req["senderStaffId"]
     text, imgs = _handle_content(req)
     text = text.replace('@啊哈', '')
-    resText = chatGPTClient.sendPrompt(text, staffID)
+    resText = chatGPTClient.sendPrompt(text, imgs, staffID)
     res = {}
     res["msgtype"] = "text"
     res["text"] = {"content": resText}
@@ -26,14 +26,14 @@ def sayHello(req):
 
 def _handle_content(req):
     if req['msgtype'] == 'text':
-        return req["text"]["content"], None
+        return req["text"]["content"], []
     elif req['msgtype'] == 'picture':
-        img = dingHttpClient.getImage(req['content']['downloadCode'], req['robotCode'])
-        return None, [img]
+        img = dingHttpClient.getDownLoadURL(req['content']['downloadCode'], req['robotCode'])
+        return "", [img]
     elif req['msgtype'] == 'richText':
         return _handle_richText(req)
     else:
-        return None, None
+        return "", []
 
 def _handle_richText(req):
     richText = req['content']['richText']
@@ -43,6 +43,6 @@ def _handle_richText(req):
         if 'text' in part:
             text += part["text"]
         elif part['type'] == 'picture':
-            imgs.append(dingHttpClient.getImage(part['downloadCode'], req['robotCode']))
+            imgs.append(dingHttpClient.getDownLoadURL(part['downloadCode'], req['robotCode']))
 
     return text, imgs

@@ -29,13 +29,15 @@ class ChatGLMClient:
         res = json.loads(res.content)
         return res
 
-    def sendPrompt(self, prompt: str, staffID: str):
+    def sendPrompt(self, text: str, imgs: list, staffID: str):
         his_re = self.redisClient.get(staffID)
         if his_re is None:
             his_re = []
         else:
             his_re = pickle.loads(his_re)
-        data = {"prompt": prompt, "history": his_re}
+        data = {"text": text, "history": his_re}
+        if len(imgs) > 0:
+            data["imageUrl"] = imgs[0]
         res = self.sendRequest(data)
         if res['status'] != 200:
             return "这个问题我不知道该怎么回答。"
