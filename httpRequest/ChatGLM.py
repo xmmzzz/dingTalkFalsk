@@ -42,6 +42,10 @@ class ChatGLMClient:
         if res['status'] != 200:
             return "这个问题我不知道该怎么回答。"
         else:
-            self.redisClient.set(staffID, pickle.dumps(res['history']))
+            this_his = []
+            this_his.append(text)
+            this_his.append(res['result'])
+            his_re.append(this_his)
+            self.redisClient.set(staffID, pickle.dumps(his_re))
             return res['result']
 

@@ -1,1 +1,1 @@
-/usr/local/bin/redis-server /usr/local/bin/redis.conf
+/home/ecs-user/redis/bin/redis-server /home/ecs-user/redis/redis.conf
